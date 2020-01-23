@@ -87,26 +87,67 @@ that overrides base values and is in this format:</p>
 </dd>
 </dl>
 <dl class="method">
+<dt id="hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.delete_other_datasets">
+<code class="sig-name descname">delete_other_datasets</code><span class="sig-paren">(</span><em class="sig-param">datasets_to_keep</em>, <em class="sig-param">metadata</em>, <em class="sig-param">delete_from_hdx=&lt;function delete_from_hdx&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.delete_other_datasets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all GeoNode datasets and associated showcases in HDX where layers have been deleted from
+the GeoNode server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datasets_to_keep</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of dataset names that are to be kept (they were added or updated)</p></li>
+<li><p><strong>metadata</strong> (<em>Dict</em>) – Dictionary containing keys: maintainerid, orgid, updatefreq, subnational</p></li>
+<li><p><strong>delete_from_hdx</strong> (<em>Callable</em><em>[</em><em>[</em><em>Dataset</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Function to call to delete dataset</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.generate_dataset_and_showcase">
-<code class="sig-name descname">generate_dataset_and_showcase</code><span class="sig-paren">(</span><em class="sig-param">countryiso</em>, <em class="sig-param">layer</em>, <em class="sig-param">maintainerid</em>, <em class="sig-param">orgid</em>, <em class="sig-param">orgname</em>, <em class="sig-param">updatefreq='Adhoc'</em>, <em class="sig-param">subnational=True</em><span class="sig-paren">)</span><a class="headerlink" href="#hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.generate_dataset_and_showcase" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_dataset_and_showcase</code><span class="sig-paren">(</span><em class="sig-param">countryiso</em>, <em class="sig-param">layer</em>, <em class="sig-param">metadata</em>, <em class="sig-param">get_date_from_title=False</em>, <em class="sig-param">process_dataset_name=&lt;function GeoNodeToHDX.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.generate_dataset_and_showcase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate dataset and showcase for GeoNode layer</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>countryiso</strong> (<em>str</em>) – ISO 3 code of country</p></li>
 <li><p><strong>layer</strong> (<em>Dict</em>) – Data about layer from GeoNode</p></li>
-<li><p><strong>maintainerid</strong> (<em>str</em>) – Maintainer ID</p></li>
-<li><p><strong>orgid</strong> (<em>str</em>) – Organisation ID</p></li>
-<li><p><strong>orgname</strong> (<em>str</em>) – Organisation name</p></li>
-<li><p><strong>updatefreq</strong> (<em>str</em>) – Update frequency. Defaults to Adhoc.</p></li>
-<li><p><strong>subnational</strong> (<em>bool</em>) – Subnational. Default to True.</p></li>
+<li><p><strong>metadata</strong> (<em>Dict</em>) – Dictionary containing keys: maintainerid, orgid, updatefreq, subnational</p></li>
+<li><p><strong>get_date_from_title</strong> (<em>bool</em>) – Whether to remove dates from title. Defaults to False.</p></li>
+<li><p><strong>process_dataset_name</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em>]</em><em>, </em><em>str</em><em>]</em>) – Function to change the dataset name. Defaults to lambda x: x.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Dataset and Showcase objects or None, None</p>
+<dd class="field-even"><p>Dataset, date ranges in dataset title and Showcase objects or None, None, None</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[Optional[Dataset],Optional[Showcase]]</p>
+<dd class="field-odd"><p>Tuple[Optional[Dataset],List,Optional[Showcase]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.generate_datasets_and_showcases">
+<code class="sig-name descname">generate_datasets_and_showcases</code><span class="sig-paren">(</span><em class="sig-param">metadata</em>, <em class="sig-param">create_dataset_showcase=&lt;function create_dataset_showcase&gt;</em>, <em class="sig-param">countrydata=None</em>, <em class="sig-param">get_date_from_title=False</em>, <em class="sig-param">process_dataset_name=&lt;function GeoNodeToHDX.&lt;lambda&gt;&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.generate_datasets_and_showcases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate datasets and showcases for all GeoNode layers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metadata</strong> (<em>Dict</em>) – Dictionary containing keys: maintainerid, orgid, updatefreq, subnational</p></li>
+<li><p><strong>create_dataset_showcase</strong> (<em>Callable</em><em>[</em><em>[</em><em>Dataset</em><em>, </em><em>Showcase</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Function to call to create dataset and showcase</p></li>
+<li><p><strong>countrydata</strong> (<em>Dict</em><em>[</em><em>str</em><em>,</em><em>Optional</em><em>[</em><em>str</em><em>]</em><em>]</em>) – Dictionary of countrydata. Defaults to None (read from GeoNode).</p></li>
+<li><p><strong>get_date_from_title</strong> (<em>bool</em>) – Whether to remove dates from title. Defaults to False.</p></li>
+<li><p><strong>process_dataset_name</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em>]</em><em>, </em><em>str</em><em>]</em>) – Function to change the dataset name. Defaults to lambda x: x.</p></li>
+<li><p><strong>**kwargs</strong> – Args to pass to dataset create_in_hdx call</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of names of datasets added or updated</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -137,7 +178,7 @@ that overrides base values and is in this format:</p>
 <dd class="field-even"><p>List of countries in form (iso3 code, name)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>List[Tuple]</p>
+<dd class="field-odd"><p>List[Dict]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -174,6 +215,26 @@ that overrides base values and is in this format:</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.get_orgname">
+<em class="property">static </em><code class="sig-name descname">get_orgname</code><span class="sig-paren">(</span><em class="sig-param">metadata</em>, <em class="sig-param">orgclass=&lt;class 'hdx.data.organization.Organization'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.get_orgname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get orgname from Dict if available or use orgid from Dict to look up organisation name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metadata</strong> (<em>Dict</em>) – Dictionary containing keys: maintainerid, orgid, updatefreq, subnational</p></li>
+<li><p><strong>orgclass</strong> (<em>Type</em>) – Class to use for look up. Defaults to Organization.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Organisation name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.get_titleabstract_mapping">
 <code class="sig-name descname">get_titleabstract_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hdx.scraper.geonode.geonodetohdx.GeoNodeToHDX.get_titleabstract_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get mappings from terms in the title or abstract to HDX metadata tags</p>
@@ -187,6 +248,38 @@ that overrides base values and is in this format:</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="hdx.scraper.geonode.geonodetohdx.create_dataset_showcase">
+<code class="sig-prename descclassname">hdx.scraper.geonode.geonodetohdx.</code><code class="sig-name descname">create_dataset_showcase</code><span class="sig-paren">(</span><em class="sig-param">dataset</em>, <em class="sig-param">showcase</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#hdx.scraper.geonode.geonodetohdx.create_dataset_showcase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create dataset and showcase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<em>Dataset</em>) – Dataset to create</p></li>
+<li><p><strong>showcase</strong> (<em>Showcase</em>) – Showcase to create</p></li>
+<li><p><strong>**kwargs</strong> – Args to pass to dataset create_in_hdx call</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="hdx.scraper.geonode.geonodetohdx.delete_from_hdx">
+<code class="sig-prename descclassname">hdx.scraper.geonode.geonodetohdx.</code><code class="sig-name descname">delete_from_hdx</code><span class="sig-paren">(</span><em class="sig-param">dataset</em><span class="sig-paren">)</span><a class="headerlink" href="#hdx.scraper.geonode.geonodetohdx.delete_from_hdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete dataset and any associated showcases</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataset</strong> (<em>Dataset</em>) – Dataset to delete</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -260,7 +353,7 @@ that overrides base values and is in this format:</p>
       &copy;Michael Rans.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
