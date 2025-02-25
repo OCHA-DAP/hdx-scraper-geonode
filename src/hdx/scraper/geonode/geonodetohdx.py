@@ -337,7 +337,9 @@ class GeoNodeToHDX:
                 self.geonode_urls.append(geonode_url)
         else:
             geonode_url = self.geonode_urls[0]
-        typename = f"geonode:{detail_url.rsplit('geonode%3A', 1)[-1]}"
+        typename = layer.get("alternate")
+        if not typename:
+            typename = f"geonode:{detail_url.rsplit('geonode%3A', 1)[-1]}"
         resource = Resource(
             {
                 "name": f"{title} shapefile",
