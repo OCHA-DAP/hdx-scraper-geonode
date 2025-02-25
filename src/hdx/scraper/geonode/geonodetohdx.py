@@ -9,7 +9,6 @@ Reads from GeoNode servers and creates datasets.
 import logging
 from collections import OrderedDict
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
-from urllib.parse import quote_plus
 
 from slugify import slugify
 
@@ -332,18 +331,19 @@ class GeoNodeToHDX:
                     if not found and "else" in mapping:
                         tags.extend(mapping["else"])
         dataset.add_tags(tags)
-        srid = quote_plus(layer["srid"])
         if "%3Ageonode%3A" in detail_url:
             geonode_url = f"https://{detail_url.rsplit('/', 1)[-1].split('%3Ageonode%3A')[0]}"
             if geonode_url not in self.geonode_urls:
                 self.geonode_urls.append(geonode_url)
         else:
             geonode_url = self.geonode_urls[0]
-        typename = f"geonode:{detail_url.rsplit('geonode%3A', 1)[-1]}"
+        typename = layer.get("alternate")
+        if not typename:
+            typename = f"geonode:{detail_url.rsplit('geonode%3A', 1)[-1]}"
         resource = Resource(
             {
                 "name": f"{title} shapefile",
-                "url": f"{geonode_url}/geoserver/wfs?format_options=charset:UTF-8&typename={typename}&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature",
+                "url": f"{geonode_url}/geoserver/geonode/ows?format_options=charset%3AUTF-8&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&typename={typename}",
                 "description": f"Zipped Shapefile. {notes}",
             }
         )
@@ -353,7 +353,7 @@ class GeoNodeToHDX:
         resource = Resource(
             {
                 "name": f"{title} geojson",
-                "url": f"{geonode_url}/geoserver/wfs?srsName={srid}&typename={typename}&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature",
+                "url": f"{geonode_url}/geoserver/geonode/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&typeName={typename}",
                 "description": f"GeoJSON file. {notes}",
             }
         )
@@ -418,7 +418,7 @@ class GeoNodeToHDX:
         for countrydata in countries:
             layers = self.get_layers(countrydata["layers"])
             logger.info(
-                f'Number of datasets to upload in {countrydata["name"]}: {len(layers)}'
+                f"Number of datasets to upload in {countrydata['name']}: {len(layers)}"
             )
             for layer in layers:
                 dataset, ranges, showcase = self.generate_dataset_and_showcase(
@@ -439,7 +439,7 @@ class GeoNodeToHDX:
                     prev_max = time_periods.get(dataset_name)
                     if prev_max and prev_max > max_date:
                         logger.warning(
-                            f'Ignoring {layer["title"]} with max date {max_date}!'
+                            f"Ignoring {layer['title']} with max date {max_date}!"
                             f" {dataset_name} (dates removed) with max date {prev_max} has been created already!"
                         )
                         continue
