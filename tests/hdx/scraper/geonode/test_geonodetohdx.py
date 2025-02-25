@@ -276,7 +276,7 @@ class TestGeoNodeToHDX:
         [
             {
                 "name": "ICA Sudan - Land Degradation shapefile",
-                "url": "http://xxx/geoserver/wfs?format_options=charset:UTF-8&typename=geonode:sdn_ica_landdegradation_geonode_20180201&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature",
+                "url": "http://xxx/geoserver/geonode/ows?format_options=charset%3AUTF-8&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&typename=geonode:sdn_ica_landdegradation_geonode_20180201",
                 "description": "Zipped Shapefile. This layer contains...",
                 "format": "shp",
                 "last_modified": "2018-11-22T16:56:00.000000",
@@ -285,7 +285,7 @@ class TestGeoNodeToHDX:
             },
             {
                 "name": "ICA Sudan - Land Degradation geojson",
-                "url": "http://xxx/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode:sdn_ica_landdegradation_geonode_20180201&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature",
+                "url": "http://xxx/geoserver/geonode/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&typeName=geonode:sdn_ica_landdegradation_geonode_20180201",
                 "description": "GeoJSON file. This layer contains...",
                 "format": "geojson",
                 "last_modified": "2018-11-22T16:56:00.000000",
@@ -296,7 +296,7 @@ class TestGeoNodeToHDX:
         [
             {
                 "name": "ICA Sudan - Most Predominant Livelihood Zones shapefile",
-                "url": "https://ogcserver.gis.wfp.org/geoserver/wfs?format_options=charset:UTF-8&typename=geonode:sdn_ica_predlhz_geonode_20180201&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature",
+                "url": "https://ogcserver.gis.wfp.org/geoserver/geonode/ows?format_options=charset%3AUTF-8&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&typename=geonode:sdn_ica_predlhz_geonode_20180201",
                 "description": "Zipped Shapefile. This layer contains...",
                 "format": "shp",
                 "last_modified": "2018-11-22T16:18:00.000000",
@@ -305,7 +305,7 @@ class TestGeoNodeToHDX:
             },
             {
                 "name": "ICA Sudan - Most Predominant Livelihood Zones geojson",
-                "url": "https://ogcserver.gis.wfp.org/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode:sdn_ica_predlhz_geonode_20180201&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature",
+                "url": "https://ogcserver.gis.wfp.org/geoserver/geonode/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&typeName=geonode:sdn_ica_predlhz_geonode_20180201",
                 "description": "GeoJSON file. This layer contains...",
                 "format": "geojson",
                 "last_modified": "2018-11-22T16:18:00.000000",
@@ -461,7 +461,7 @@ class TestGeoNodeToHDX:
         [
             {
                 "name": "Myanmar Town shapefile",
-                "url": "http://yyy/geoserver/wfs?format_options=charset:UTF-8&typename=geonode:mmr_town_2019_july&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature",
+                "url": "http://yyy/geoserver/geonode/ows?format_options=charset%3AUTF-8&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&typename=geonode:mmr_town_2019_july",
                 "description": "Zipped Shapefile. Towns are urban areas divided into wards.",
                 "format": "shp",
                 "last_modified": "2019-08-05T00:00:00.000000",
@@ -470,7 +470,7 @@ class TestGeoNodeToHDX:
             },
             {
                 "name": "Myanmar Town geojson",
-                "url": "http://yyy/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode:mmr_town_2019_july&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature",
+                "url": "http://yyy/geoserver/geonode/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&typeName=geonode:mmr_town_2019_july",
                 "description": "GeoJSON file. Towns are urban areas divided into wards.",
                 "format": "geojson",
                 "last_modified": "2019-08-05T00:00:00.000000",
@@ -481,7 +481,7 @@ class TestGeoNodeToHDX:
         [
             {
                 "name": "Myanmar Forest Cover Change shapefile",
-                "url": "http://yyy/geoserver/wfs?format_options=charset:UTF-8&typename=geonode:myan_lvl2_smoothed_dec2015_resamp&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature",
+                "url": "http://yyy/geoserver/geonode/ows?format_options=charset%3AUTF-8&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&typename=geonode:myan_lvl2_smoothed_dec2015_resamp",
                 "description": "Zipped Shapefile. A Landsat-based classification of Myanmar’s forest cover",
                 "format": "shp",
                 "last_modified": "2019-02-12T00:00:00.000000",
@@ -490,7 +490,7 @@ class TestGeoNodeToHDX:
             },
             {
                 "name": "Myanmar Forest Cover Change geojson",
-                "url": "http://yyy/geoserver/wfs?srsName=EPSG%3A4326&typename=geonode:myan_lvl2_smoothed_dec2015_resamp&outputFormat=json&version=1.0.0&service=WFS&request=GetFeature",
+                "url": "http://yyy/geoserver/geonode/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&typeName=geonode:myan_lvl2_smoothed_dec2015_resamp",
                 "description": "GeoJSON file. A Landsat-based classification of Myanmar’s forest cover",
                 "format": "geojson",
                 "last_modified": "2019-02-12T00:00:00.000000",
@@ -925,10 +925,6 @@ class TestGeoNodeToHDX:
                 },
                 {
                     "name": "natural disasters",
-                    "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
-                },
-                {
-                    "name": "flooding-storm surge",
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
                 {
