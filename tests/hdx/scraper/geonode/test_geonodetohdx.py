@@ -663,9 +663,7 @@ class TestGeoNodeToHDX:
         Configuration._create(
             hdx_read_only=True,
             user_agent="test",
-            project_config_yaml=join(
-                "tests", "config", "project_configuration.yml"
-            ),
+            project_config_yaml=join("tests", "config", "project_configuration.yml"),
         )
         Locations.set_validlocations(
             [
@@ -765,9 +763,7 @@ class TestGeoNodeToHDX:
                     )
                 ]
 
-        monkeypatch.setattr(
-            Dataset, "search_in_hdx", staticmethod(search_in_hdx)
-        )
+        monkeypatch.setattr(Dataset, "search_in_hdx", staticmethod(search_in_hdx))
 
     def test_get_countries(self, configuration, downloader):
         geonodetohdx = GeoNodeToHDX("http://xxx", downloader)
@@ -1009,8 +1005,8 @@ class TestGeoNodeToHDX:
 
     def test_generate_datasets_and_showcases(self, configuration, downloader):
         geonodetohdx = GeoNodeToHDX("http://xxx", downloader)
-        datasets = list()
-        showcases = list()
+        datasets = []
+        showcases = []
 
         def create_dataset_showcase(dataset, showcase, batch):
             datasets.append(dataset)
@@ -1026,8 +1022,8 @@ class TestGeoNodeToHDX:
         assert datasets_to_keep == self.wfpnames
 
         geonodetohdx = GeoNodeToHDX("http://yyy", downloader)
-        datasets = list()
-        showcases = list()
+        datasets = []
+        showcases = []
         datasets_to_keep = geonodetohdx.generate_datasets_and_showcases(
             self.mimumetadata,
             create_dataset_showcase=create_dataset_showcase,
@@ -1041,8 +1037,8 @@ class TestGeoNodeToHDX:
         assert datasets_to_keep == self.mimunames
 
         geonodetohdx = GeoNodeToHDX("http://zzz", downloader)
-        datasets = list()
-        showcases = list()
+        datasets = []
+        showcases = []
         datasets_to_keep = geonodetohdx.generate_datasets_and_showcases(
             self.mimumetadata,
             create_dataset_showcase=create_dataset_showcase,
@@ -1059,8 +1055,8 @@ class TestGeoNodeToHDX:
         assert datasets_to_keep == self.mimunames
 
         geonodetohdx = GeoNodeToHDX("http://aaa", downloader)
-        datasets = list()
-        showcases = list()
+        datasets = []
+        showcases = []
         datasets_to_keep = geonodetohdx.generate_datasets_and_showcases(
             self.mimumetadata,
             create_dataset_showcase=create_dataset_showcase,
@@ -1071,10 +1067,8 @@ class TestGeoNodeToHDX:
         assert showcases == self.mimushowcases_withdates
         assert datasets_to_keep == self.mimunames_withdates
 
-    def test_delete_other_datasets(
-        self, search_datasets, configuration, downloader
-    ):
-        datasets = list()
+    def test_delete_other_datasets(self, search_datasets, configuration, downloader):
+        datasets = []
 
         def delete_from_hdx(dataset):
             datasets.append(dataset)
@@ -1093,7 +1087,7 @@ class TestGeoNodeToHDX:
         assert datasets[1]["name"] == self.wfpdatasets[1]["name"]
         assert datasets[2]["name"] == self.wfpdatasets[2]["name"]
         geonodetohdx = GeoNodeToHDX("http://yyy", downloader)
-        datasets = list()
+        datasets = []
         geonodetohdx.delete_other_datasets(
             self.mimunames, self.mimumetadata, delete_from_hdx=delete_from_hdx
         )

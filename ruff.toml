@@ -1,4 +1,3 @@
-line-length = 79
 exclude = ["_version.py"]
 
 [lint]
@@ -9,10 +8,7 @@ select = [
   "I"    # isort
 ]
 ignore = [
-    "E501", # Line too long
-    "D100", # missing-module-docstring
-    "D101", # missing-class-docstring
-    "D103" # missing-function-docstring
+    "E501" # Line too long
 ]
 
 [lint.isort]
