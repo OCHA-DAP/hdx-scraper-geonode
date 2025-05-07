@@ -663,9 +663,7 @@ class TestGeoNodeToHDX:
         Configuration._create(
             hdx_read_only=True,
             user_agent="test",
-            project_config_yaml=join(
-                "tests", "config", "project_configuration.yml"
-            ),
+            project_config_yaml=join("tests", "config", "project_configuration.yml"),
         )
         Locations.set_validlocations(
             [
@@ -765,9 +763,7 @@ class TestGeoNodeToHDX:
                     )
                 ]
 
-        monkeypatch.setattr(
-            Dataset, "search_in_hdx", staticmethod(search_in_hdx)
-        )
+        monkeypatch.setattr(Dataset, "search_in_hdx", staticmethod(search_in_hdx))
 
     def test_get_countries(self, configuration, downloader):
         geonodetohdx = GeoNodeToHDX("http://xxx", downloader)
@@ -1071,9 +1067,7 @@ class TestGeoNodeToHDX:
         assert showcases == self.mimushowcases_withdates
         assert datasets_to_keep == self.mimunames_withdates
 
-    def test_delete_other_datasets(
-        self, search_datasets, configuration, downloader
-    ):
+    def test_delete_other_datasets(self, search_datasets, configuration, downloader):
         datasets = list()
 
         def delete_from_hdx(dataset):
