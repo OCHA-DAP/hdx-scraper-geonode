@@ -158,7 +158,7 @@ class GeoNodeToHDX:
         jsonresponse = self.downloader.download_json(
             f"{self.geonode_urls[0]}/api/regions"
         )
-        countries = list()
+        countries = []
         for location in jsonresponse["objects"]:
             loccode = location["code"]
             locname = location["name_en"]
@@ -227,8 +227,8 @@ class GeoNodeToHDX:
         metadata: Dict,
         get_date_from_title: bool = False,
         process_dataset_name: Callable[[str], str] = lambda x: x,
-        dataset_codlevel_mapping: Dict[str, List] = dict(),
-        dataset_tags_mapping: Dict[str, List] = dict(),
+        dataset_codlevel_mapping: Dict[str, List] = {},
+        dataset_tags_mapping: Dict[str, List] = {},
     ) -> Tuple[Optional[Dataset], Optional[List], Optional[Showcase]]:
         """
         Generate dataset and showcase for GeoNode layer
@@ -261,7 +261,7 @@ class GeoNodeToHDX:
                 change_title=True, set_time_period=True
             )
         else:
-            ranges = list()
+            ranges = []
         title = dataset["title"]
         logger.info(f"Creating dataset: {title}")
         detail_url = layer["detail_url"]
@@ -377,8 +377,8 @@ class GeoNodeToHDX:
         countrydata: Dict[str, Optional[str]] = None,
         get_date_from_title: bool = False,
         process_dataset_name: Callable[[str], str] = lambda x: x,
-        dataset_codlevel_mapping: Dict[str, List] = dict(),
-        dataset_tags_mapping: Dict[str, List] = dict(),
+        dataset_codlevel_mapping: Dict[str, List] = {},
+        dataset_tags_mapping: Dict[str, List] = {},
         **kwargs: Any,
     ) -> List[str]:
         """
