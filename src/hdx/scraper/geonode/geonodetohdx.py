@@ -344,11 +344,17 @@ class GeoNodeToHDX:
                 extension = link["extension"]
                 if extension in ("csv", "excel", "json", "zip", "geotiff"):
                     ext_format = self._extension_lookup.get(extension, extension)
+                    ext_name = link["name"]
+                    if (
+                        ext_format == "zipped shapefile"
+                        and "shape" not in ext_name.lower()
+                    ):
+                        continue
                     resource = Resource(
                         {
-                            "name": f"{title} {ext_format}",
+                            "name": f"{title} {ext_name}",
                             "url": link["url"],
-                            "description": f"{ext_format} file. {notes}",
+                            "description": f"{ext_name} file. {notes}",
                         }
                     )
                     resource.set_format(ext_format)
