@@ -373,6 +373,8 @@ class GeoNodeToHDX:
             resource.set_format("GeoJSON")
             resource.set_date_data_updated(date)
             dataset.add_update_resource(resource)
+        if len(dataset.get_resources()) == 0:
+            return None, None, None
 
         showcase = Showcase(
             {
