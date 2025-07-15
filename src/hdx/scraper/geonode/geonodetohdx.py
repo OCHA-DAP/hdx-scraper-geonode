@@ -334,7 +334,7 @@ class GeoNodeToHDX:
 
         resource_uri = layer.get("resource_uri")
         if resource_uri:
-            json = self._retriever.download_json(f"{geonode_url}/{resource_uri}")
+            json = self._retriever.download_json(f"{geonode_url}{resource_uri}")
             for link in json["links"]:
                 extension = link["extension"]
                 logger.debug(f"Extension is {extension}")
