@@ -340,10 +340,13 @@ class GeoNodeToHDX:
         resource_uri = layer.get("resource_uri")
         if resource_uri:
             json = self._retriever.download_json(f"{geonode_url}{resource_uri}")
+            added_formats = []
             for link in json["links"]:
                 extension = link["extension"]
                 if extension in ("csv", "excel", "json", "zip", "geotiff"):
                     ext_format = self._extension_lookup.get(extension, extension)
+                    if ext_format in added_formats:
+                        continue
                     ext_name = link["name"]
                     if (
                         ext_format == "zipped shapefile"
@@ -360,6 +363,7 @@ class GeoNodeToHDX:
                     resource.set_format(ext_format)
                     resource.set_date_data_updated(date)
                     dataset.add_update_resource(resource)
+                    added_formats.append(ext_format)
         else:
             typename = layer.get("alternate")
             if not typename:
