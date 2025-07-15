@@ -113,6 +113,7 @@ class GeoNodeToHDX:
         self._ignore_data = geonode_config["ignore_data"]
         self._category_mapping = geonode_config["category_mapping"]
         self._titleabstract_mapping = geonode_config["titleabstract_mapping"]
+        self._extensions = set()
 
     def get_ignore_data(self) -> List[str]:
         """
@@ -337,7 +338,7 @@ class GeoNodeToHDX:
             json = self._retriever.download_json(f"{geonode_url}{resource_uri}")
             for link in json["links"]:
                 extension = link["extension"]
-                logger.debug(f"Extension is {extension}")
+                self._extensions.add(extension)
                 if extension in ("geojson", "shp", "geotiff"):
                     resource = Resource(
                         {
