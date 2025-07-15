@@ -705,13 +705,13 @@ class TestGeoNodeToHDX:
         }
 
     @pytest.fixture(scope="function")
-    def downloader(self):
+    def retriever(self):
         class Response:
             @staticmethod
             def json():
                 pass
 
-        class Download:
+        class Retrieve:
             @staticmethod
             def download_json(url):
                 if url == "http://xxx/api/regions":
@@ -732,7 +732,7 @@ class TestGeoNodeToHDX:
                     }
                 return None
 
-        return Download()
+        return Retrieve()
 
     @pytest.fixture(scope="function")
     def yaml_config(self):
@@ -765,8 +765,8 @@ class TestGeoNodeToHDX:
 
         monkeypatch.setattr(Dataset, "search_in_hdx", staticmethod(search_in_hdx))
 
-    def test_get_countries(self, configuration, downloader):
-        geonodetohdx = GeoNodeToHDX("http://xxx", downloader)
+    def test_get_countries(self, configuration, retriever):
+        geonodetohdx = GeoNodeToHDX("http://xxx", retriever)
         countries = geonodetohdx.get_countries()
         assert countries == [{"iso3": "SDN", "name": "Sudan", "layers": "SDN"}]
         countries = geonodetohdx.get_countries(use_count=False)
@@ -776,16 +776,16 @@ class TestGeoNodeToHDX:
             {"iso3": "YEM", "name": "Yemen", "layers": "YEM"},
         ]
 
-    def test_get_layers(self, downloader):
-        geonodetohdx = GeoNodeToHDX("http://xxx", downloader)
+    def test_get_layers(self, retriever):
+        geonodetohdx = GeoNodeToHDX("http://xxx", retriever)
         layers = geonodetohdx.get_layers(countryiso="SDN")
         assert layers == TestGeoNodeToHDX.wfplayersdata
-        geonodetohdx = GeoNodeToHDX("http://yyy", downloader)
+        geonodetohdx = GeoNodeToHDX("http://yyy", retriever)
         layers = geonodetohdx.get_layers()
         assert layers == TestGeoNodeToHDX.mimulayersdata
 
-    def test_generate_dataset_and_showcase(self, configuration, downloader):
-        geonodetohdx = GeoNodeToHDX("http://xxx", downloader)
+    def test_generate_dataset_and_showcase(self, configuration, retriever):
+        geonodetohdx = GeoNodeToHDX("http://xxx", retriever)
         dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
             "SDN",
             TestGeoNodeToHDX.wfplayersdata[0],
@@ -827,9 +827,9 @@ class TestGeoNodeToHDX:
             ),
         ]
         assert showcase == self.wfpshowcases[1]
-        assert geonodetohdx.geonode_urls[1] == "https://ogcserver.gis.wfp.org"
+        assert geonodetohdx._geonode_urls[1] == "https://ogcserver.gis.wfp.org"
 
-        geonodetohdx = GeoNodeToHDX("http://yyy", downloader)
+        geonodetohdx = GeoNodeToHDX("http://yyy", retriever)
         dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
             "MMR",
             TestGeoNodeToHDX.mimulayersdata[0],
@@ -866,8 +866,8 @@ class TestGeoNodeToHDX:
         ]
         assert showcase == self.mimushowcases[1]
 
-    def test_mappings(self, configuration, downloader, yaml_config):
-        geonodetohdx = GeoNodeToHDX("http://yyy", downloader)
+    def test_mappings(self, configuration, retriever, yaml_config):
+        geonodetohdx = GeoNodeToHDX("http://yyy", retriever)
         layersdata = copy.deepcopy(TestGeoNodeToHDX.mimulayersdata[0])
         abstract = layersdata["abstract"]
         layersdata["abstract"] = f"{abstract} deprecated"
@@ -876,7 +876,7 @@ class TestGeoNodeToHDX:
         )
         assert dataset is None
         assert showcase is None
-        geonodetohdx = GeoNodeToHDX("http://yyy", downloader, yaml_config)
+        geonodetohdx = GeoNodeToHDX("http://yyy", retriever, yaml_config)
         layersdata["abstract"] = f"{abstract} deprecated"
         dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
             "MMR", layersdata, self.mimumetadata, get_date_from_title=True
@@ -1003,8 +1003,8 @@ class TestGeoNodeToHDX:
             ],
         }
 
-    def test_generate_datasets_and_showcases(self, configuration, downloader):
-        geonodetohdx = GeoNodeToHDX("http://xxx", downloader)
+    def test_generate_datasets_and_showcases(self, configuration, retriever):
+        geonodetohdx = GeoNodeToHDX("http://xxx", retriever)
         datasets = []
         showcases = []
 
@@ -1021,7 +1021,7 @@ class TestGeoNodeToHDX:
         assert showcases == self.wfpshowcases
         assert datasets_to_keep == self.wfpnames
 
-        geonodetohdx = GeoNodeToHDX("http://yyy", downloader)
+        geonodetohdx = GeoNodeToHDX("http://yyy", retriever)
         datasets = []
         showcases = []
         datasets_to_keep = geonodetohdx.generate_datasets_and_showcases(
@@ -1036,7 +1036,7 @@ class TestGeoNodeToHDX:
         assert showcases == self.mimushowcases
         assert datasets_to_keep == self.mimunames
 
-        geonodetohdx = GeoNodeToHDX("http://zzz", downloader)
+        geonodetohdx = GeoNodeToHDX("http://zzz", retriever)
         datasets = []
         showcases = []
         datasets_to_keep = geonodetohdx.generate_datasets_and_showcases(
@@ -1054,7 +1054,7 @@ class TestGeoNodeToHDX:
         assert showcases == mimushowcases
         assert datasets_to_keep == self.mimunames
 
-        geonodetohdx = GeoNodeToHDX("http://aaa", downloader)
+        geonodetohdx = GeoNodeToHDX("http://aaa", retriever)
         datasets = []
         showcases = []
         datasets_to_keep = geonodetohdx.generate_datasets_and_showcases(
@@ -1067,14 +1067,14 @@ class TestGeoNodeToHDX:
         assert showcases == self.mimushowcases_withdates
         assert datasets_to_keep == self.mimunames_withdates
 
-    def test_delete_other_datasets(self, search_datasets, configuration, downloader):
+    def test_delete_other_datasets(self, search_datasets, configuration, retriever):
         datasets = []
 
         def delete_from_hdx(dataset):
             datasets.append(dataset)
 
-        geonodetohdx = GeoNodeToHDX("http://xxx", downloader)
-        geonodetohdx.geonode_urls.append("https://ogcserver.gis.wfp.org")
+        geonodetohdx = GeoNodeToHDX("http://xxx", retriever)
+        geonodetohdx._geonode_urls.append("https://ogcserver.gis.wfp.org")
         geonodetohdx.delete_other_datasets(
             self.wfpnames, self.wfpmetadata, delete_from_hdx=delete_from_hdx
         )
@@ -1086,7 +1086,7 @@ class TestGeoNodeToHDX:
         assert datasets[0]["name"] == self.wfpdatasets[0]["name"]
         assert datasets[1]["name"] == self.wfpdatasets[1]["name"]
         assert datasets[2]["name"] == self.wfpdatasets[2]["name"]
-        geonodetohdx = GeoNodeToHDX("http://yyy", downloader)
+        geonodetohdx = GeoNodeToHDX("http://yyy", retriever)
         datasets = []
         geonodetohdx.delete_other_datasets(
             self.mimunames, self.mimumetadata, delete_from_hdx=delete_from_hdx

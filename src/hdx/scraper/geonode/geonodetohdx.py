@@ -19,9 +19,9 @@ from hdx.data.resource import Resource
 from hdx.data.showcase import Showcase
 from hdx.location.country import Country
 from hdx.utilities.dateparse import default_date, parse_date
-from hdx.utilities.downloader import Download
 from hdx.utilities.loader import load_yaml
 from hdx.utilities.path import script_dir_plus_file
+from hdx.utilities.retriever import Retrieve
 from hdx.utilities.uuid import get_uuid
 
 logger = logging.getLogger(__name__)
@@ -99,20 +99,20 @@ class GeoNodeToHDX:
     def __init__(
         self,
         geonode_url: str,
-        downloader: Download,
+        retriever: Retrieve,
         hdx_geonode_config_yaml: Optional[str] = None,
     ) -> None:
-        self.geonode_urls = [geonode_url]
-        self.downloader = downloader
+        self._geonode_urls = [geonode_url]
+        self._retriever = retriever
         base_hdx_geonode_config_yaml = script_dir_plus_file(
             "hdx_geonode.yaml", GeoNodeToHDX
         )
         geonode_config = load_yaml(base_hdx_geonode_config_yaml)
         if hdx_geonode_config_yaml is not None:
             geonode_config.update(load_yaml(hdx_geonode_config_yaml))
-        self.ignore_data = geonode_config["ignore_data"]
-        self.category_mapping = geonode_config["category_mapping"]
-        self.titleabstract_mapping = geonode_config["titleabstract_mapping"]
+        self._ignore_data = geonode_config["ignore_data"]
+        self._category_mapping = geonode_config["category_mapping"]
+        self._titleabstract_mapping = geonode_config["titleabstract_mapping"]
 
     def get_ignore_data(self) -> List[str]:
         """
@@ -122,7 +122,7 @@ class GeoNodeToHDX:
             List[str]: List of terms in the abstract that mean that the dataset should not be added to HDX
 
         """
-        return self.ignore_data
+        return self._ignore_data
 
     def get_category_mapping(self) -> Dict[str, str]:
         """
@@ -132,7 +132,7 @@ class GeoNodeToHDX:
             Dict[str,str]: List of mappings from the category field category__gn_description to HDX metadata tags
 
         """
-        return self.category_mapping
+        return self._category_mapping
 
     def get_titleabstract_mapping(self) -> Dict[str, Union[Dict, List]]:
         """
@@ -142,7 +142,7 @@ class GeoNodeToHDX:
             Dict[str,Union[Dict,List]]: List of mappings from terms in the title or abstract to HDX metadata tags
 
         """
-        return self.titleabstract_mapping
+        return self._titleabstract_mapping
 
     def get_countries(self, use_count: bool = True) -> List[Dict]:
         """
@@ -155,8 +155,8 @@ class GeoNodeToHDX:
             List[Dict]: List of countries in form (iso3 code, name)
 
         """
-        jsonresponse = self.downloader.download_json(
-            f"{self.geonode_urls[0]}/api/regions"
+        jsonresponse = self._retriever.download_json(
+            f"{self._geonode_urls[0]}/api/regions"
         )
         countries = []
         for location in jsonresponse["objects"]:
@@ -195,8 +195,8 @@ class GeoNodeToHDX:
             regionstr = ""
         else:
             regionstr = f"/?regions__code__in={countryiso}"
-        jsonresponse = self.downloader.download_json(
-            f"{self.geonode_urls[0]}/api/layers{regionstr}"
+        jsonresponse = self._retriever.download_json(
+            f"{self._geonode_urls[0]}/api/layers{regionstr}"
         )
         return jsonresponse["objects"]
 
@@ -248,7 +248,7 @@ class GeoNodeToHDX:
         origtitle = layer["title"].strip()
         notes = layer["abstract"]
         abstract = notes.lower()
-        for term in self.ignore_data:
+        for term in self._ignore_data:
             if term in abstract:
                 logger.warning(
                     f"Ignoring {origtitle} as term {term} present in abstract!"
@@ -301,15 +301,15 @@ class GeoNodeToHDX:
         tags.append("geodata")
         tag = layer.get("category__gn_description")
         if tag is not None:
-            if tag in self.category_mapping:
-                tag = self.category_mapping[tag]
+            if tag in self._category_mapping:
+                tag = self._category_mapping[tag]
             tags.append(tag)
         keywords = layer.get("keywords", [])
         tags.extend(keywords)
         title_abstract = f"{title} {notes}".lower()
-        for key in self.titleabstract_mapping:
+        for key in self._titleabstract_mapping:
             if key in title_abstract:
-                mapping = self.titleabstract_mapping[key]
+                mapping = self._titleabstract_mapping[key]
                 if isinstance(mapping, list):
                     tags.extend(mapping)
                 elif isinstance(mapping, dict):
@@ -327,40 +327,59 @@ class GeoNodeToHDX:
             geonode_url = (
                 f"https://{detail_url.rsplit('/', 1)[-1].split('%3Ageonode%3A')[0]}"
             )
-            if geonode_url not in self.geonode_urls:
-                self.geonode_urls.append(geonode_url)
+            if geonode_url not in self._geonode_urls:
+                self._geonode_urls.append(geonode_url)
         else:
-            geonode_url = self.geonode_urls[0]
-        typename = layer.get("alternate")
-        if not typename:
-            typename = f"geonode:{detail_url.rsplit('geonode%3A', 1)[-1]}"
-        resource = Resource(
-            {
-                "name": f"{title} shapefile",
-                "url": f"{geonode_url}/geoserver/geonode/ows?format_options=charset%3AUTF-8&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&typename={typename}",
-                "description": f"Zipped Shapefile. {notes}",
-            }
-        )
-        resource.set_format("zipped shapefile")
-        resource.set_date_data_updated(date)
-        dataset.add_update_resource(resource)
-        resource = Resource(
-            {
-                "name": f"{title} geojson",
-                "url": f"{geonode_url}/geoserver/geonode/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&typeName={typename}",
-                "description": f"GeoJSON file. {notes}",
-            }
-        )
-        resource.set_format("GeoJSON")
-        resource.set_date_data_updated(date)
-        dataset.add_update_resource(resource)
+            geonode_url = self._geonode_urls[0]
+
+        resource_uri = layer.get("resource_uri")
+        if resource_uri:
+            json = self._retriever.download_json(resource_uri)
+            for link in json["links"]:
+                extension = link["extension"]
+                logger.debug(f"Extension is {extension}")
+                if extension in ("geojson", "shp", "geotiff"):
+                    resource = Resource(
+                        {
+                            "name": f"{title} {extension}",
+                            "url": link["url"],
+                            "description": f"{extension}. {notes}",
+                        }
+                    )
+                    resource.set_format(extension)
+                    resource.set_date_data_updated(date)
+                    dataset.add_update_resource(resource)
+        else:
+            typename = layer.get("alternate")
+            if not typename:
+                typename = f"geonode:{detail_url.rsplit('geonode%3A', 1)[-1]}"
+            resource = Resource(
+                {
+                    "name": f"{title} shapefile",
+                    "url": f"{geonode_url}/geoserver/geonode/ows?format_options=charset%3AUTF-8&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&typename={typename}",
+                    "description": f"Zipped Shapefile. {notes}",
+                }
+            )
+            resource.set_format("zipped shapefile")
+            resource.set_date_data_updated(date)
+            dataset.add_update_resource(resource)
+            resource = Resource(
+                {
+                    "name": f"{title} geojson",
+                    "url": f"{geonode_url}/geoserver/geonode/ows?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application%2Fjson&typeName={typename}",
+                    "description": f"GeoJSON file. {notes}",
+                }
+            )
+            resource.set_format("GeoJSON")
+            resource.set_date_data_updated(date)
+            dataset.add_update_resource(resource)
 
         showcase = Showcase(
             {
                 "name": f"{slugified_name}-showcase",
                 "title": title,
                 "notes": notes,
-                "url": f"{self.geonode_urls[0]}{detail_url}",
+                "url": f"{self._geonode_urls[0]}{detail_url}",
                 "image_url": layer["thumbnail_url"],
             }
         )
@@ -467,7 +486,7 @@ class GeoNodeToHDX:
                 continue
             if dataset["name"] in datasets_to_keep:
                 continue
-            if not any(x in dataset.get_resource()["url"] for x in self.geonode_urls):
+            if not any(x in dataset.get_resource()["url"] for x in self._geonode_urls):
                 continue
             logger.info(f"Deleting {dataset['title']}")
             delete_from_hdx(dataset)
