@@ -113,7 +113,11 @@ class GeoNodeToHDX:
         self._ignore_data = geonode_config["ignore_data"]
         self._category_mapping = geonode_config["category_mapping"]
         self._titleabstract_mapping = geonode_config["titleabstract_mapping"]
-        self._extension_lookup = {"excel": "xlsx", "json": "geojson"}
+        self._extension_lookup = {
+            "excel": "xlsx",
+            "json": "geojson",
+            "zip": "zipped shapefile",
+        }
 
     def get_ignore_data(self) -> List[str]:
         """
@@ -339,14 +343,14 @@ class GeoNodeToHDX:
             for link in json["links"]:
                 extension = link["extension"]
                 if extension in ("csv", "excel", "json", "zip", "geotiff"):
+                    ext_format = self._extension_lookup.get(extension, extension)
                     resource = Resource(
                         {
-                            "name": f"{title} {extension}",
+                            "name": f"{title} {ext_format}",
                             "url": link["url"],
-                            "description": f"{extension}. {notes}",
+                            "description": f"{ext_format} file. {notes}",
                         }
                     )
-                    ext_format = self._extension_lookup.get(extension, extension)
                     resource.set_format(ext_format)
                     resource.set_date_data_updated(date)
                     dataset.add_update_resource(resource)
