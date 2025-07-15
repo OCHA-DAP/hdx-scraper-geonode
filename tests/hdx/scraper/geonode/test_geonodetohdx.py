@@ -227,6 +227,7 @@ class TestGeoNodeToHDX:
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
             ],
+            "caveats": "",
         },
         {
             "name": "wfp-geonode-ica-sudan-most-predominant-livelihood-zones",
@@ -248,6 +249,7 @@ class TestGeoNodeToHDX:
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
             ],
+            "caveats": "",
         },
         {
             "name": "wfp-geonode-ica-sudan-temporal",
@@ -269,6 +271,7 @@ class TestGeoNodeToHDX:
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
             ],
+            "caveats": "",
         },
     ]
 
@@ -433,6 +436,7 @@ class TestGeoNodeToHDX:
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
             ],
+            "caveats": "",
         },
         {
             "name": "mimu-geonode-myanmar-forest-cover-change",
@@ -454,6 +458,7 @@ class TestGeoNodeToHDX:
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
             ],
+            "caveats": "",
         },
     ]
 
@@ -573,6 +578,7 @@ class TestGeoNodeToHDX:
                 "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
             },
         ],
+        "caveats": "Time period is set to publication date rather than the date the data covers",
     }
     mimudatasets_withdates = [
         mimudataset_withdate,
@@ -596,6 +602,7 @@ class TestGeoNodeToHDX:
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
             ],
+            "caveats": "Time period is set to publication date rather than the date the data covers",
         },
         mimudataset_withdate,
     ]
@@ -972,6 +979,7 @@ class TestGeoNodeToHDX:
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
             ],
+            "caveats": "",
         }
         layersdata["abstract"] = f"{abstract} security nutrition"
         dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
@@ -1001,6 +1009,7 @@ class TestGeoNodeToHDX:
                     "vocabulary_id": "4e61d464-4943-4e97-973a-84673c1aaa87",
                 },
             ],
+            "caveats": "",
         }
 
     def test_generate_datasets_and_showcases(self, configuration, retriever):

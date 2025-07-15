@@ -271,7 +271,7 @@ class GeoNodeToHDX:
         logger.info(f"Creating dataset: {title}")
         detail_url = layer["detail_url"]
         supplemental_information = layer["supplemental_information"]
-        if supplemental_information.lower()[:7] == "no info":
+        if "no info" in supplemental_information.lower():
             dataset_notes = notes
         else:
             dataset_notes = f"{notes}\n\n{supplemental_information}"
@@ -280,13 +280,18 @@ class GeoNodeToHDX:
         if temporal_extent_start:
             temporal_extent_end = layer["temporal_extent_end"]
             dataset.set_time_period(temporal_extent_start, temporal_extent_end)
+            dataset["caveats"] = ""
         elif origtitle == title:
             dataset.set_time_period(date)
+            dataset["caveats"] = (
+                "Time period is set to publication date rather than the date the data covers"
+            )
         else:
             dataset_notes = f"{dataset_notes}\n\nOriginal dataset title: {origtitle}"
             logger.info(
                 f"Using {ranges[0][0]}-{ranges[0][1]} instead of {date} for time period"
             )
+            dataset["caveats"] = ""
         slugified_name = slugify(f"{self.get_orgname(metadata)}_geonode_{title}")
         slugified_name = process_dataset_name(slugified_name)
         slugified_name = slugified_name[:90]
