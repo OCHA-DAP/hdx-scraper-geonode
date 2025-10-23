@@ -36,7 +36,7 @@ def create_dataset_showcase(
     Args:
         dataset (Dataset): Dataset to create
         showcase (Showcase): Showcase to create
-        **kwargs: Args to pass to dataset update_from_yaml and create_in_hdx
+        **kwargs: dataset_metadata path for update_from_yaml, args for create_in_hdx
 
     Returns:
         None
@@ -437,7 +437,7 @@ class GeoNodeToHDX:
             process_dataset_name (Callable[[str], str]): Function to change the dataset name. Defaults to lambda x: x.
             dataset_codlevel_mapping (Dict[str, List]): Mapping from dataset name to cod levels. Defaults to empty dictionary.
             dataset_tags_mapping (Dict[str, List]): Mapping from dataset name to additional tags. Defaults to empty dictionary.
-            **kwargs: Args to pass to dataset create_in_hdx call
+            **kwargs: dataset_metadata path for update_from_yaml, args for create_in_hdx
 
         Returns:
             List[str]: List of names of datasets added or updated
