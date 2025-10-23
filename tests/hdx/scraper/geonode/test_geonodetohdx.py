@@ -283,8 +283,6 @@ class TestGeoNodeToHDX:
                 "description": "Zipped Shapefile. This layer contains...",
                 "format": "shp",
                 "last_modified": "2018-11-22T16:56:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
             {
                 "name": "ICA Sudan - Land Degradation geojson",
@@ -292,8 +290,6 @@ class TestGeoNodeToHDX:
                 "description": "GeoJSON file. This layer contains...",
                 "format": "geojson",
                 "last_modified": "2018-11-22T16:56:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
         ],
         [
@@ -303,8 +299,6 @@ class TestGeoNodeToHDX:
                 "description": "Zipped Shapefile. This layer contains...",
                 "format": "shp",
                 "last_modified": "2018-11-22T16:18:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
             {
                 "name": "ICA Sudan - Most Predominant Livelihood Zones geojson",
@@ -312,8 +306,6 @@ class TestGeoNodeToHDX:
                 "description": "GeoJSON file. This layer contains...",
                 "format": "geojson",
                 "last_modified": "2018-11-22T16:18:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
         ],
         [
@@ -323,8 +315,6 @@ class TestGeoNodeToHDX:
                 "description": "Zipped Shapefile. This layer contains...",
                 "format": "shp",
                 "last_modified": "2018-11-22T16:18:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
             {
                 "name": "ICA Sudan temporal geojson",
@@ -332,8 +322,6 @@ class TestGeoNodeToHDX:
                 "description": "GeoJSON file. This layer contains...",
                 "format": "geojson",
                 "last_modified": "2018-11-22T16:18:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
         ],
     ]
@@ -470,8 +458,6 @@ class TestGeoNodeToHDX:
                 "description": "Zipped Shapefile. Towns are urban areas divided into wards.",
                 "format": "shp",
                 "last_modified": "2019-08-05T00:00:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
             {
                 "name": "Myanmar Town geojson",
@@ -479,8 +465,6 @@ class TestGeoNodeToHDX:
                 "description": "GeoJSON file. Towns are urban areas divided into wards.",
                 "format": "geojson",
                 "last_modified": "2019-08-05T00:00:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
         ],
         [
@@ -490,8 +474,6 @@ class TestGeoNodeToHDX:
                 "description": "Zipped Shapefile. A Landsat-based classification of Myanmar’s forest cover",
                 "format": "shp",
                 "last_modified": "2019-02-12T00:00:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
             {
                 "name": "Myanmar Forest Cover Change geojson",
@@ -499,8 +481,6 @@ class TestGeoNodeToHDX:
                 "description": "GeoJSON file. A Landsat-based classification of Myanmar’s forest cover",
                 "format": "geojson",
                 "last_modified": "2019-02-12T00:00:00.000000",
-                "resource_type": "api",
-                "url_type": "api",
             },
         ],
     ]
