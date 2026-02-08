@@ -8,12 +8,12 @@ Reads from GeoNode servers and creates datasets.
 
 import logging
 from collections import OrderedDict
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from collections.abc import Callable
+from datetime import datetime
+from typing import Any
 
-from slugify import slugify
-
-from . import __version__
 from hdx.data.dataset import Dataset
+from hdx.data.hdxobject import HDXError
 from hdx.data.organization import Organization
 from hdx.data.resource import Resource
 from hdx.data.showcase import Showcase
@@ -23,6 +23,10 @@ from hdx.utilities.loader import load_yaml
 from hdx.utilities.path import script_dir_plus_file
 from hdx.utilities.retriever import Retrieve
 from hdx.utilities.uuid import get_uuid
+from slugify import slugify
+
+from . import __version__
+from .dataset_title_helper import DatasetTitleHelper
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +107,7 @@ class GeoNodeToHDX:
         self,
         geonode_url: str,
         retriever: Retrieve,
-        hdx_geonode_config_yaml: Optional[str] = None,
+        hdx_geonode_config_yaml: str | None = None,
     ) -> None:
         self._geonode_urls = [geonode_url]
         self._retriever = retriever
@@ -122,7 +126,7 @@ class GeoNodeToHDX:
             "zip": "zipped shapefile",
         }
 
-    def get_ignore_data(self) -> List[str]:
+    def get_ignore_data(self) -> list[str]:
         """
         Get terms in the abstract that mean that the dataset should not be added to HDX
 
@@ -132,7 +136,7 @@ class GeoNodeToHDX:
         """
         return self._ignore_data
 
-    def get_category_mapping(self) -> Dict[str, str]:
+    def get_category_mapping(self) -> dict[str, str]:
         """
         Get mappings from the category field category__gn_description to HDX metadata tags
 
@@ -142,7 +146,7 @@ class GeoNodeToHDX:
         """
         return self._category_mapping
 
-    def get_titleabstract_mapping(self) -> Dict[str, Union[Dict, List]]:
+    def get_titleabstract_mapping(self) -> dict[str, dict | list]:
         """
         Get mappings from terms in the title or abstract to HDX metadata tags
 
@@ -152,7 +156,7 @@ class GeoNodeToHDX:
         """
         return self._titleabstract_mapping
 
-    def get_countries(self, use_count: bool = True) -> List[Dict]:
+    def get_countries(self, use_count: bool = True) -> list[dict]:
         """
         Get countries from GeoNode
 
@@ -189,7 +193,7 @@ class GeoNodeToHDX:
             countries.append({"iso3": loccode, "name": countryname, "layers": loccode})
         return countries
 
-    def get_layers(self, countryiso: Optional[str] = None) -> List[Dict]:
+    def get_layers(self, countryiso: str | None = None) -> list[dict]:
         """
         Get layers from GeoNode optionally for a particular country
 
@@ -209,7 +213,7 @@ class GeoNodeToHDX:
         return jsonresponse["objects"]
 
     @staticmethod
-    def get_orgname(metadata: Dict, orgclass: Type = Organization) -> str:
+    def get_orgname(metadata: dict, orgclass: type = Organization) -> str:
         """
         Get orgname from Dict if available or use orgid from Dict to look up organisation name
 
@@ -228,16 +232,44 @@ class GeoNodeToHDX:
             metadata["orgname"] = orgname
         return orgname
 
+    @staticmethod
+    def remove_dates_from_title(
+        dataset: Dataset, change_title: bool = True, set_time_period: bool = False
+    ) -> list[tuple[datetime, datetime]]:
+        """Remove dates from dataset title returning sorted the dates that were found in
+        title. The title in the dataset metadata will be changed by default. The
+        dataset's metadata field time period will not be changed by default, but if
+        set_time_period is True, then the range with the lowest start date will be used
+        to set the time period field.
+
+        Args:
+            change_title: Whether to change the dataset title. Defaults to True.
+            set_time_period: Whether to set time period from date or range in title. Defaults to False.
+
+        Returns:
+            Date ranges found in title
+        """
+        if "title" not in dataset:
+            raise HDXError("Dataset has no title!")
+        title = dataset["title"]
+        newtitle, ranges = DatasetTitleHelper.get_dates_from_title(title)
+        if change_title:
+            dataset["title"] = newtitle
+        if set_time_period and len(ranges) != 0:
+            startdate, enddate = ranges[0]
+            dataset.set_time_period(startdate, enddate)
+        return ranges
+
     def generate_dataset_and_showcase(
         self,
         countryiso: str,
-        layer: Dict,
-        metadata: Dict,
+        layer: dict,
+        metadata: dict,
         get_date_from_title: bool = False,
         process_dataset_name: Callable[[str], str] = lambda x: x,
-        dataset_codlevel_mapping: Dict[str, List] = {},
-        dataset_tags_mapping: Dict[str, List] = {},
-    ) -> Tuple[Optional[Dataset], Optional[List], Optional[Showcase]]:
+        dataset_codlevel_mapping: dict[str, list] = {},
+        dataset_tags_mapping: dict[str, list] = {},
+    ) -> tuple[Dataset | None, list | None, Showcase | None]:
         """
         Generate dataset and showcase for GeoNode layer
 
@@ -265,8 +297,8 @@ class GeoNodeToHDX:
 
         dataset = Dataset({"title": origtitle})
         if get_date_from_title:
-            ranges = dataset.remove_dates_from_title(
-                change_title=True, set_time_period=True
+            ranges = self.remove_dates_from_title(
+                dataset, change_title=True, set_time_period=True
             )
         else:
             ranges = []
@@ -413,18 +445,18 @@ class GeoNodeToHDX:
 
     def generate_datasets_and_showcases(
         self,
-        metadata: Dict,
+        metadata: dict,
         create_dataset_showcase: Callable[
             [Dataset, Showcase, Any], None
         ] = create_dataset_showcase,
         use_count: bool = True,
-        countrydata: Dict[str, Optional[str]] = None,
+        countrydata: dict[str, str | None] = None,
         get_date_from_title: bool = False,
         process_dataset_name: Callable[[str], str] = lambda x: x,
-        dataset_codlevel_mapping: Dict[str, List] = {},
-        dataset_tags_mapping: Dict[str, List] = {},
+        dataset_codlevel_mapping: dict[str, list] = {},
+        dataset_tags_mapping: dict[str, list] = {},
         **kwargs: Any,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Generate datasets and showcases for all GeoNode layers
 
@@ -487,8 +519,8 @@ class GeoNodeToHDX:
 
     def delete_other_datasets(
         self,
-        datasets_to_keep: List[str],
-        metadata: Dict,
+        datasets_to_keep: list[str],
+        metadata: dict,
         delete_from_hdx: Callable[[Dataset], None] = delete_from_hdx,
     ) -> None:
         """

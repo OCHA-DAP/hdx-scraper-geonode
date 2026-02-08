@@ -5,12 +5,13 @@ from datetime import datetime, timezone
 from os.path import join
 
 import pytest
-
 from hdx.api.configuration import Configuration
 from hdx.api.locations import Locations
 from hdx.data.dataset import Dataset
+from hdx.data.hdxobject import HDXError
 from hdx.data.vocabulary import Vocabulary
 from hdx.location.country import Country
+
 from hdx.scraper.geonode.geonodetohdx import GeoNodeToHDX
 
 
@@ -1091,3 +1092,72 @@ class TestGeoNodeToHDX:
                 return {"name": "abc"}
 
         assert GeoNodeToHDX.get_orgname(metadata, orgclass=MyOrg) == "abc"
+
+    def test_remove_dates_from_title(self, configuration):
+        dataset = Dataset()
+        with pytest.raises(HDXError):
+            GeoNodeToHDX.remove_dates_from_title(dataset)
+        assert "title" not in dataset
+        title = "Title with no dates"
+        dataset["title"] = title
+        assert GeoNodeToHDX.remove_dates_from_title(dataset) == []
+        assert dataset["title"] == title
+        assert "dataset_date" not in dataset
+        assert GeoNodeToHDX.remove_dates_from_title(dataset, set_time_period=True) == []
+        title = "ICA Armenia, 2017 - Drought Risk, 1981-2015"
+        dataset["title"] = title
+        expected = [
+            (
+                datetime(1981, 1, 1, 0, 0, tzinfo=timezone.utc),
+                datetime(2015, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+            ),
+            (
+                datetime(2017, 1, 1, 0, 0, tzinfo=timezone.utc),
+                datetime(2017, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+            ),
+        ]
+        assert (
+            GeoNodeToHDX.remove_dates_from_title(dataset, change_title=False)
+            == expected
+        )
+        assert dataset["title"] == title
+        assert "dataset_date" not in dataset
+        assert GeoNodeToHDX.remove_dates_from_title(dataset) == expected
+        newtitle = "ICA Armenia - Drought Risk"
+        assert dataset["title"] == newtitle
+        assert "dataset_date" not in dataset
+        dataset["title"] = title
+        assert (
+            GeoNodeToHDX.remove_dates_from_title(dataset, set_time_period=True)
+            == expected
+        )
+        assert dataset["title"] == newtitle
+        assert dataset["dataset_date"] == "[1981-01-01T00:00:00 TO 2015-12-31T23:59:59]"
+        assert GeoNodeToHDX.remove_dates_from_title(dataset) == []
+        dataset["title"] = "Mon_State_Village_Tract_Boundaries 9999 2001"
+        expected = [
+            (
+                datetime(2001, 1, 1, 0, 0, tzinfo=timezone.utc),
+                datetime(2001, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+            )
+        ]
+        assert (
+            GeoNodeToHDX.remove_dates_from_title(dataset, set_time_period=True)
+            == expected
+        )
+        assert dataset["title"] == "Mon_State_Village_Tract_Boundaries 9999"
+        assert dataset["dataset_date"] == "[2001-01-01T00:00:00 TO 2001-12-31T23:59:59]"
+        dataset["title"] = "Mon_State_Village_Tract_Boundaries 2001 99"
+        assert (
+            GeoNodeToHDX.remove_dates_from_title(dataset, set_time_period=True)
+            == expected
+        )
+        assert dataset["title"] == "Mon_State_Village_Tract_Boundaries 99"
+        assert dataset["dataset_date"] == "[2001-01-01T00:00:00 TO 2001-12-31T23:59:59]"
+        dataset["title"] = "Mon_State_Village_Tract_Boundaries 9999 2001 99"
+        assert (
+            GeoNodeToHDX.remove_dates_from_title(dataset, set_time_period=True)
+            == expected
+        )
+        assert dataset["title"] == "Mon_State_Village_Tract_Boundaries 9999 99"
+        assert dataset["dataset_date"] == "[2001-01-01T00:00:00 TO 2001-12-31T23:59:59]"
