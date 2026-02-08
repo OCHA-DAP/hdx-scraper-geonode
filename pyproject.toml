@@ -31,24 +31,117 @@ classifiers = [
     "Operating System :: MacOS",
     "Operating System :: Microsoft :: Windows",
 ]
-requires-python = ">=3.8"
+readme = "README.md"
+dynamic = ["version"]
+requires-python = ">=3.10"
 
 dependencies = [
-  "hdx-python-api>= 6.5.2",
-  "hdx-python-country>= 3.9.8",
-  "hdx-python-utilities>= 3.9.5",
-  "python-slugify",
+    "hdx-python-api>= 6.6.5",
+    "hdx-python-country>= 4.1.0",
+    "hdx-python-utilities>= 4.0.4",
+    "python-slugify",
+    "quantulum3",
+    "setuptools< 81"
 ]
-dynamic = ["version"]
 
-[project.readme]
-file = "README.md"
-content-type = "text/markdown"
+[project.optional-dependencies]
+docs = ["mkapi"]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pre-commit",
+    "ruff==0.14.14",
+]
 
 [project.urls]
 Homepage = "https://github.com/OCHA-DAP/hdx-scraper-geonode"
 
-[project.optional-dependencies]
-test = ["pytest", "pytest-cov"]
-dev = ["pre-commit"]
-docs = ["mkapi"]
+# ----------------------------------------------------------------------------
+# Hatchling (Build & Versioning)
+# ----------------------------------------------------------------------------
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+version_scheme = "python-simplified-semver"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/hdx/scraper/geonode/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hdx"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+# ----------------------------------------------------------------------------
+# Ruff (Linting & Formatting)
+# ----------------------------------------------------------------------------
+
+[tool.ruff]
+target-version = "py310"
+src = ["src"]
+exclude = ["_version.py"]
+
+[tool.ruff.lint]
+# Defaults are E (pycodestyle) and F (pyflakes). We extend them:
+extend-select = [
+  "I",   # isort
+  "UP",  # pyupgrade
+]
+ignore = [
+    "E501", # Line too long
+]
+
+[tool.ruff.lint.isort]
+known-local-folder = ["hdx.scraper.geonode"]
+known-third-party = [
+    "hdx.api",
+    "hdx.data",
+    "hdx.facades",
+    "hdx.location",
+    "hdx.utilities",
+]
+
+# ----------------------------------------------------------------------------
+# Pytest (Testing)
+# ----------------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+log_cli = true
+addopts = """
+    --color=yes
+    --rootdir=.
+    --junitxml=test-results.xml
+    --cov
+    --no-cov-on-fail
+    --cov-report=lcov
+    --cov-report=term-missing
+"""
+
+# ----------------------------------------------------------------------------
+# Coverage (Reporting)
+# ----------------------------------------------------------------------------
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/_version.py"]
+
+[tool.coverage.report]
+exclude_also = [
+    "from ._version",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@(abc\\.)?abstractmethod",
+]
