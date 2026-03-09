@@ -50,7 +50,7 @@ def create_dataset_showcase(
         dataset.update_from_yaml(path=kwargs["dataset_metadata"])
     else:
         dataset.update_from_yaml()
-    dataset.create_in_hdx(remove_additional_resources=True, hxl_update=False, **kwargs)
+    dataset.create_in_hdx(remove_additional_resources=True, **kwargs)
     showcase.create_in_hdx()
     showcase.add_dataset(dataset)
 

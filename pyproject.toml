@@ -37,11 +37,10 @@ requires-python = ">=3.10"
 
 dependencies = [
     "hdx-python-api>= 6.6.5",
-    "hdx-python-country>= 4.1.0",
-    "hdx-python-utilities>= 4.0.4",
+    "hdx-python-country>= 4.1.1",
+    "hdx-python-utilities>= 4.0.8",
     "python-slugify",
     "quantulum3",
-    "setuptools< 81"
 ]
 
 [project.optional-dependencies]
