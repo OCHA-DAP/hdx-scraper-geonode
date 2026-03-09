@@ -43,6 +43,12 @@ class TestDatasetTitleHelper:
             "Myanmar Self Administered Regions Boundaries MIMU v9.2.1",
             [],
         )
+        assert DatasetTitleHelper.get_dates_from_title(
+            "Myanmar Self Administered Regions Boundaries MIMU 97km"
+        ) == (
+            "Myanmar Self Administered Regions Boundaries MIMU 97km",
+            [],
+        )
         assert DatasetTitleHelper.get_dates_from_title("Myanmar Town 2019 July") == (
             "Myanmar Town",
             expected_ranges_2019,
