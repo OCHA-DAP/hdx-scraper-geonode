@@ -1,7 +1,7 @@
 """Geonode scraper Tests"""
 
 import copy
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from os.path import join
 
 import pytest
@@ -785,12 +785,12 @@ class TestGeoNodeToHDX:
         assert resources == self.wfpresources[0]
         assert ranges == [
             (
-                datetime(2001, 1, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2013, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2001, 1, 1, 0, 0, tzinfo=UTC),
+                datetime(2013, 12, 31, 23, 59, 59, tzinfo=UTC),
             ),
             (
-                datetime(2018, 1, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2018, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2018, 1, 1, 0, 0, tzinfo=UTC),
+                datetime(2018, 12, 31, 23, 59, 59, tzinfo=UTC),
             ),
         ]
         assert showcase == self.wfpshowcases[0]
@@ -806,12 +806,12 @@ class TestGeoNodeToHDX:
         assert resources == self.wfpresources[1]
         assert ranges == [
             (
-                datetime(2014, 1, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2014, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2014, 1, 1, 0, 0, tzinfo=UTC),
+                datetime(2014, 12, 31, 23, 59, 59, tzinfo=UTC),
             ),
             (
-                datetime(2018, 1, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2018, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2018, 1, 1, 0, 0, tzinfo=UTC),
+                datetime(2018, 12, 31, 23, 59, 59, tzinfo=UTC),
             ),
         ]
         assert showcase == self.wfpshowcases[1]
@@ -831,8 +831,8 @@ class TestGeoNodeToHDX:
         assert resources == self.mimuresources[0]
         assert ranges == [
             (
-                datetime(2019, 7, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2019, 7, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2019, 7, 1, 0, 0, tzinfo=UTC),
+                datetime(2019, 7, 31, 23, 59, 59, tzinfo=UTC),
             )
         ]
         assert showcase == self.mimushowcases[0]
@@ -848,8 +848,8 @@ class TestGeoNodeToHDX:
         assert resources == self.mimuresources[1]
         assert ranges == [
             (
-                datetime(2002, 1, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2014, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2002, 1, 1, 0, 0, tzinfo=UTC),
+                datetime(2014, 12, 31, 23, 59, 59, tzinfo=UTC),
             )
         ]
         assert showcase == self.mimushowcases[1]
@@ -1108,12 +1108,12 @@ class TestGeoNodeToHDX:
         dataset["title"] = title
         expected = [
             (
-                datetime(1981, 1, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2015, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(1981, 1, 1, 0, 0, tzinfo=UTC),
+                datetime(2015, 12, 31, 23, 59, 59, tzinfo=UTC),
             ),
             (
-                datetime(2017, 1, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2017, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2017, 1, 1, 0, 0, tzinfo=UTC),
+                datetime(2017, 12, 31, 23, 59, 59, tzinfo=UTC),
             ),
         ]
         assert (
@@ -1137,8 +1137,8 @@ class TestGeoNodeToHDX:
         dataset["title"] = "Mon_State_Village_Tract_Boundaries 9999 2001"
         expected = [
             (
-                datetime(2001, 1, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2001, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2001, 1, 1, 0, 0, tzinfo=UTC),
+                datetime(2001, 12, 31, 23, 59, 59, tzinfo=UTC),
             )
         ]
         assert (

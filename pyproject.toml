@@ -18,11 +18,10 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
@@ -33,14 +32,14 @@ classifiers = [
 ]
 readme = "README.md"
 dynamic = ["version"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 dependencies = [
-    "hdx-python-api>= 6.6.5",
-    "hdx-python-country>= 4.1.1",
-    "hdx-python-utilities>= 4.0.8",
+    "hdx-python-api>=6.7.7",
+    "hdx-python-country>=4.2.6",
+    "hdx-python-utilities>=4.2.5",
     "python-slugify",
-    "quantulum3>= 0.10.0",
+    "quantulum3>=0.10.0",
 ]
 
 [project.optional-dependencies]
@@ -82,7 +81,7 @@ allow-direct-references = true
 # ----------------------------------------------------------------------------
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py311"
 src = ["src"]
 exclude = ["_version.py"]
 
