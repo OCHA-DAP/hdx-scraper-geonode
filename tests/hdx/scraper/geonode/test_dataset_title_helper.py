@@ -1,6 +1,6 @@
 """Dataset Title Helper Tests"""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -12,8 +12,8 @@ class TestDatasetTitleHelper:
     def expected_ranges_2019(self):
         return [
             (
-                datetime(2019, 7, 1, 0, 0, tzinfo=timezone.utc),
-                datetime(2019, 7, 31, 23, 59, 59, tzinfo=timezone.utc),
+                datetime(2019, 7, 1, 0, 0, tzinfo=UTC),
+                datetime(2019, 7, 31, 23, 59, 59, tzinfo=UTC),
             )
         ]
 
@@ -59,8 +59,8 @@ class TestDatasetTitleHelper:
             "Formal Sector School Location Upper Myanmar",
             [
                 (
-                    datetime(2019, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2019, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2019, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2019, 12, 31, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -70,12 +70,12 @@ class TestDatasetTitleHelper:
             "ICA Armenia - Drought Risk",
             [
                 (
-                    datetime(1981, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2015, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(1981, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2015, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
                 (
-                    datetime(2017, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2017, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2017, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2017, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
             ],
         )
@@ -85,12 +85,12 @@ class TestDatasetTitleHelper:
             "ICA Sudan - Land Degradation",
             [
                 (
-                    datetime(2001, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2013, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2001, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2013, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
                 (
-                    datetime(2018, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2018, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2018, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2018, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
             ],
         )
@@ -100,8 +100,8 @@ class TestDatasetTitleHelper:
             "Central African Republic, Bridges",
             [
                 (
-                    datetime(2019, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2019, 1, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2019, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2019, 1, 31, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -111,8 +111,8 @@ class TestDatasetTitleHelper:
             "Afghanistan:District Accessibility for WFP and Partners Staff",
             [
                 (
-                    datetime(2019, 5, 5, 0, 0, tzinfo=timezone.utc),
-                    datetime(2019, 5, 5, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2019, 5, 5, 0, 0, tzinfo=UTC),
+                    datetime(2019, 5, 5, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -122,8 +122,8 @@ class TestDatasetTitleHelper:
             "Tanintharyi Region Land Cover (Original)",
             [
                 (
-                    datetime(2016, 3, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2016, 3, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2016, 3, 1, 0, 0, tzinfo=UTC),
+                    datetime(2016, 3, 31, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -133,8 +133,8 @@ class TestDatasetTitleHelper:
             "Kachin State and Sagaing Region Forest Cover Change",
             [
                 (
-                    datetime(2002, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2014, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2002, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2014, 12, 31, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -150,12 +150,12 @@ class TestDatasetTitleHelper:
             "ICA Afghanistan - Landslide hazard",
             [
                 (
-                    datetime(2013, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2013, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2013, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2013, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
                 (
-                    datetime(2019, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2019, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2019, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2019, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
             ],
         )
@@ -165,8 +165,8 @@ class TestDatasetTitleHelper:
             "Afghanistan Percentage of Food Insecure Population Based on Combined Food Consumption Score and Coping Strategy Index by Province - ALCS",
             [
                 (
-                    datetime(2013, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2014, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2013, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2014, 12, 31, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -174,8 +174,8 @@ class TestDatasetTitleHelper:
             "ALCS",
             [
                 (
-                    datetime(2000, 10, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2000, 10, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2000, 10, 1, 0, 0, tzinfo=UTC),
+                    datetime(2000, 10, 31, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -198,8 +198,8 @@ class TestDatasetTitleHelper:
             "State_Village_Tract_Boundaries lala",
             [
                 (
-                    datetime(2001, 12, 10, 0, 0, tzinfo=timezone.utc),
-                    datetime(2001, 12, 10, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2001, 12, 10, 0, 0, tzinfo=UTC),
+                    datetime(2001, 12, 10, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -209,12 +209,12 @@ class TestDatasetTitleHelper:
             "Crops production - Tajikistan Vulnerability & Resilience Atlas",
             [
                 (
-                    datetime(2016, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2016, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2016, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2016, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
                 (
-                    datetime(2019, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2019, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2019, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2019, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
             ],
         )
@@ -224,8 +224,8 @@ class TestDatasetTitleHelper:
             "Location of partners",
             [
                 (
-                    datetime(2019, 2, 5, 0, 0, tzinfo=timezone.utc),
-                    datetime(2019, 2, 5, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2019, 2, 5, 0, 0, tzinfo=UTC),
+                    datetime(2019, 2, 5, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -235,12 +235,12 @@ class TestDatasetTitleHelper:
             "ICA Armenia - Land Degradation",
             [
                 (
-                    datetime(2001, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2012, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2001, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2012, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
                 (
-                    datetime(2016, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2017, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2016, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2017, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
             ],
         )
@@ -250,12 +250,12 @@ class TestDatasetTitleHelper:
             "ICA Afghanistan - Food Insecurity Risk",
             [
                 (
-                    datetime(2007, 8, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2014, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2007, 8, 1, 0, 0, tzinfo=UTC),
+                    datetime(2014, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
                 (
-                    datetime(2016, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2016, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2016, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2016, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
             ],
         )
@@ -263,8 +263,8 @@ class TestDatasetTitleHelper:
             "Risk, 2020/19",
             [
                 (
-                    datetime(2014, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2014, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2014, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2014, 12, 31, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -274,8 +274,8 @@ class TestDatasetTitleHelper:
             "south sudan access constraints shp",
             [
                 (
-                    datetime(2020, 1, 24, 0, 0, tzinfo=timezone.utc),
-                    datetime(2020, 1, 24, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2020, 1, 24, 0, 0, tzinfo=UTC),
+                    datetime(2020, 1, 24, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -285,8 +285,8 @@ class TestDatasetTitleHelper:
             "Cambodia Flood Extent",
             [
                 (
-                    datetime(2011, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2011, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2011, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2011, 12, 31, 23, 59, 59, tzinfo=UTC),
                 )
             ],
         )
@@ -296,12 +296,12 @@ class TestDatasetTitleHelper:
             "Access: Proportion of the population consuming less than 2100 kcal per day (average), National Statistics Committee",
             [
                 (
-                    datetime(2011, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2013, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2011, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2013, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
                 (
-                    datetime(2013, 1, 1, 0, 0, tzinfo=timezone.utc),
-                    datetime(2013, 12, 31, 23, 59, 59, tzinfo=timezone.utc),
+                    datetime(2013, 1, 1, 0, 0, tzinfo=UTC),
+                    datetime(2013, 12, 31, 23, 59, 59, tzinfo=UTC),
                 ),
             ],
         )
