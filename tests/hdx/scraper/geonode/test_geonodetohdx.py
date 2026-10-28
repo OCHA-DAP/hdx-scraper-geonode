@@ -3,6 +3,7 @@
 import copy
 from datetime import UTC, datetime
 from os.path import join
+from typing import ClassVar
 
 import pytest
 from hdx.api.configuration import Configuration
@@ -16,11 +17,13 @@ from hdx.scraper.geonode.geonodetohdx import GeoNodeToHDX, is_allowed_url
 
 
 class TestGeoNodeToHDX:
-    dataset_codlevel_mapping = {"mimu-geonode-myanmar-town": "cod-standard"}
-    dataset_tags_mapping = {
+    dataset_codlevel_mapping: ClassVar[dict] = {
+        "mimu-geonode-myanmar-town": "cod-standard"
+    }
+    dataset_tags_mapping: ClassVar[dict] = {
         "mimu-geonode-myanmar-town": ["common operational dataset - cod"]
     }
-    wfplocationsdata = [
+    wfplocationsdata: ClassVar[list] = [
         {
             "code": "SAF",
             "count": 2,
@@ -71,7 +74,7 @@ class TestGeoNodeToHDX:
         },
     ]
 
-    mimulayersdata = [
+    mimulayersdata: ClassVar[list] = [
         {
             "abstract": "Towns are urban areas divided into wards.",
             "category__gn_description": "Location",
@@ -114,7 +117,7 @@ class TestGeoNodeToHDX:
         },
     ]
 
-    oldmimulayer = {
+    oldmimulayer: ClassVar[dict] = {
         "abstract": "A Landsat-based classification of Myanmar’s forest cover",
         "category__gn_description": None,
         "csw_type": "dataset",
@@ -135,7 +138,7 @@ class TestGeoNodeToHDX:
         "uuid": "5801f3fa-2ee9-11e9-8d0e-42010a80000c",
     }
 
-    wfplayersdata = [
+    wfplayersdata: ClassVar[list] = [
         {
             "abstract": "This layer contains...",
             "category__gn_description": "Physical Features, Land Cover, Land Use",
@@ -201,13 +204,13 @@ class TestGeoNodeToHDX:
         },
     ]
 
-    wfpmetadata = {
+    wfpmetadata: ClassVar[dict] = {
         "maintainerid": "d7a13725-5cb5-48f4-87ac-a70b5cea531e",
         "orgid": "3ecac442-7fed-448d-8f78-b385ef6f84e7",
         "orgname": "WFP",
     }
 
-    wfpdatasets = [
+    wfpdatasets: ClassVar[list] = [
         {
             "name": "wfp-geonode-ica-sudan-land-degradation",
             "title": "ICA Sudan - Land Degradation",
@@ -276,7 +279,7 @@ class TestGeoNodeToHDX:
         },
     ]
 
-    wfpresources = [
+    wfpresources: ClassVar[list] = [
         [
             {
                 "name": "ICA Sudan - Land Degradation shapefile",
@@ -327,7 +330,7 @@ class TestGeoNodeToHDX:
         ],
     ]
 
-    wfporganization = {
+    wfporganization: ClassVar[dict] = {
         "description": "WFP is the world's largest humanitarian agency fighting hunger worldwide...",
         "created": "2014-10-24T15:55:52.696098",
         "title": "WFP - World Food Programme",
@@ -341,7 +344,7 @@ class TestGeoNodeToHDX:
         "approval_status": "approved",
     }
 
-    wfpshowcases = [
+    wfpshowcases: ClassVar[list] = [
         {
             "name": "wfp-geonode-ica-sudan-land-degradation-showcase",
             "title": "ICA Sudan - Land Degradation",
@@ -395,15 +398,15 @@ class TestGeoNodeToHDX:
         },
     ]
 
-    wfpnames = [dataset["name"] for dataset in wfpdatasets]
+    wfpnames: ClassVar[list] = [dataset["name"] for dataset in wfpdatasets]
 
-    mimumetadata = {
+    mimumetadata: ClassVar[dict] = {
         "maintainerid": "196196be-6037-4488-8b71-d786adf4c081",
         "orgid": "bde18602-2e92-462a-8e88-a0018a7b13f9",
         "orgname": "MIMU",
     }
 
-    mimudatasets = [
+    mimudatasets: ClassVar[list] = [
         {
             "name": "mimu-geonode-myanmar-town",
             "title": "Myanmar Town",
@@ -451,7 +454,7 @@ class TestGeoNodeToHDX:
         },
     ]
 
-    mimuresources = [
+    mimuresources: ClassVar[list] = [
         [
             {
                 "name": "Myanmar Town shapefile",
@@ -486,7 +489,7 @@ class TestGeoNodeToHDX:
         ],
     ]
 
-    mimuorganization = {
+    mimuorganization: ClassVar[dict] = {
         "description": "The Myanmar Information Management Unit / MIMU is a service to the UN Country Team and Humanitarian Country Team...",
         "created": "2015-12-09T09:21:45.264734",
         "title": "Myanmar Information Management Unit (MIMU)",
@@ -500,7 +503,7 @@ class TestGeoNodeToHDX:
         "approval_status": "approved",
     }
 
-    mimushowcases = [
+    mimushowcases: ClassVar[list] = [
         {
             "name": "mimu-geonode-myanmar-town-showcase",
             "title": "Myanmar Town",
@@ -537,9 +540,9 @@ class TestGeoNodeToHDX:
         },
     ]
 
-    mimunames = [dataset["name"] for dataset in mimudatasets]
+    mimunames: ClassVar[list] = [dataset["name"] for dataset in mimudatasets]
 
-    mimudataset_withdate = {
+    mimudataset_withdate: ClassVar[dict] = {
         "title": "Myanmar Town 2019 July",
         "dataset_date": "[2019-08-05T00:00:00 TO 2019-08-05T00:00:00]",
         "name": "mimu-geonode-myanmar-town-2019-july",
@@ -561,7 +564,7 @@ class TestGeoNodeToHDX:
         ],
         "caveats": "Time period is set to publication date rather than the date the data covers",
     }
-    mimudatasets_withdates = [
+    mimudatasets_withdates: ClassVar[list] = [
         mimudataset_withdate,
         {
             "title": "Myanmar 2002-2014 Forest Cover Change",
@@ -588,7 +591,7 @@ class TestGeoNodeToHDX:
         mimudataset_withdate,
     ]
 
-    mimushowcase_withdate = {
+    mimushowcase_withdate: ClassVar[dict] = {
         "name": "mimu-geonode-myanmar-town-2019-july-showcase",
         "title": "Myanmar Town 2019 July",
         "notes": "Towns are urban areas divided into wards.",
@@ -605,7 +608,7 @@ class TestGeoNodeToHDX:
             },
         ],
     }
-    mimushowcases_withdates = [
+    mimushowcases_withdates: ClassVar[list] = [
         mimushowcase_withdate,
         {
             "name": "mimu-geonode-myanmar-2002-2014-forest-cover-change-showcase",
@@ -627,7 +630,7 @@ class TestGeoNodeToHDX:
         mimushowcase_withdate,
     ]
 
-    mimunames_withdates = [
+    mimunames_withdates: ClassVar[list] = [
         "mimu-geonode-myanmar-town-2019-july",
         "mimu-geonode-myanmar-2002-2014-forest-cover-change",
     ]
@@ -900,27 +903,27 @@ class TestGeoNodeToHDX:
         layersdata = copy.deepcopy(TestGeoNodeToHDX.mimulayersdata[0])
         abstract = layersdata["abstract"]
         layersdata["abstract"] = f"{abstract} deprecated"
-        dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
+        dataset, _, showcase = geonodetohdx.generate_dataset_and_showcase(
             "MMR", layersdata, self.mimumetadata, get_date_from_title=True
         )
         assert dataset is None
         assert showcase is None
         geonodetohdx = GeoNodeToHDX("http://yyy", retriever, yaml_config)
         layersdata["abstract"] = f"{abstract} deprecated"
-        dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
+        dataset, _, showcase = geonodetohdx.generate_dataset_and_showcase(
             "MMR", layersdata, self.mimumetadata, get_date_from_title=True
         )
         assert dataset is not None
         assert showcase is not None
         layersdata["abstract"] = f"{abstract} abcd"
-        dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
+        dataset, _, showcase = geonodetohdx.generate_dataset_and_showcase(
             "MMR", layersdata, self.mimumetadata, get_date_from_title=True
         )
         assert dataset is None
         assert showcase is None
         layersdata["abstract"] = f"{abstract} hdx"
         geonodetohdx.get_ignore_data().append("hdx")
-        dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
+        dataset, _, showcase = geonodetohdx.generate_dataset_and_showcase(
             "MMR", layersdata, self.mimumetadata, get_date_from_title=True
         )
         assert dataset is None
@@ -930,7 +933,7 @@ class TestGeoNodeToHDX:
         layersdata["abstract"] = (
             f"{abstract} landslide flood drought ffa emergency levels admin boundaries food security refugee camp idp malnutrition food distribution streets airport bridges frost erosion"
         )
-        dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
+        dataset, _, showcase = geonodetohdx.generate_dataset_and_showcase(
             "MMR", layersdata, self.mimumetadata, get_date_from_title=True
         )
         assert dataset == {
@@ -1004,7 +1007,7 @@ class TestGeoNodeToHDX:
             "caveats": "",
         }
         layersdata["abstract"] = f"{abstract} security nutrition"
-        dataset, ranges, showcase = geonodetohdx.generate_dataset_and_showcase(
+        dataset, _, showcase = geonodetohdx.generate_dataset_and_showcase(
             "MMR", layersdata, self.mimumetadata, get_date_from_title=True
         )
         assert dataset == {
