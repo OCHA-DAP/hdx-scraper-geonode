@@ -285,8 +285,8 @@ class GeoNodeToHDX:
         metadata: dict,
         get_date_from_title: bool = False,
         process_dataset_name: Callable[[str], str] = lambda x: x,
-        dataset_codlevel_mapping: dict[str, list] = {},
-        dataset_tags_mapping: dict[str, list] = {},
+        dataset_codlevel_mapping: dict[str, list] | None = None,
+        dataset_tags_mapping: dict[str, list] | None = None,
     ) -> tuple[Dataset | None, list | None, Showcase | None]:
         """
         Generate dataset and showcase for GeoNode layer
@@ -303,6 +303,10 @@ class GeoNodeToHDX:
         Returns:
             Tuple[Optional[Dataset],List,Optional[Showcase]]: Dataset, date ranges in dataset title and Showcase objects or None, None, None
         """
+        if dataset_codlevel_mapping is None:
+            dataset_codlevel_mapping = {}
+        if dataset_tags_mapping is None:
+            dataset_tags_mapping = {}
         origtitle = layer["title"].strip()
         notes = layer["abstract"]
         abstract = notes.lower()
@@ -360,7 +364,7 @@ class GeoNodeToHDX:
         cod_level = dataset_codlevel_mapping.get(slugified_name)
         if cod_level:
             dataset["cod_level"] = cod_level
-        tags = dataset_tags_mapping.get(slugified_name, list())
+        tags = list(dataset_tags_mapping.get(slugified_name, []))
         tags.append("geodata")
         tag = layer.get("category__gn_description")
         if tag is not None:
@@ -480,11 +484,11 @@ class GeoNodeToHDX:
             [Dataset, Showcase, Any], None
         ] = create_dataset_showcase,
         use_count: bool = True,
-        countrydata: dict[str, str | None] = None,
+        countrydata: dict[str, str | None] | None = None,
         get_date_from_title: bool = False,
         process_dataset_name: Callable[[str], str] = lambda x: x,
-        dataset_codlevel_mapping: dict[str, list] = {},
-        dataset_tags_mapping: dict[str, list] = {},
+        dataset_codlevel_mapping: dict[str, list] | None = None,
+        dataset_tags_mapping: dict[str, list] | None = None,
         **kwargs: Any,
     ) -> list[str]:
         """
@@ -515,14 +519,14 @@ class GeoNodeToHDX:
         time_periods = OrderedDict()
         if "batch" not in kwargs:
             kwargs["batch"] = get_uuid()
-        for countrydata in countries:
-            layers = self.get_layers(countrydata["layers"])
+        for country in countries:
+            layers = self.get_layers(country["layers"])
             logger.info(
-                f"Number of datasets to upload in {countrydata['name']}: {len(layers)}"
+                f"Number of datasets to upload in {country['name']}: {len(layers)}"
             )
             for layer in layers:
                 dataset, ranges, showcase = self.generate_dataset_and_showcase(
-                    countrydata["iso3"],
+                    country["iso3"],
                     layer,
                     metadata,
                     get_date_from_title,
@@ -534,8 +538,7 @@ class GeoNodeToHDX:
                     dataset_name = dataset["name"]
                     max_date = default_date
                     for range in ranges:
-                        if range[1] > max_date:
-                            max_date = range[1]
+                        max_date = max(max_date, range[1])
                     prev_max = time_periods.get(dataset_name)
                     if prev_max and prev_max > max_date:
                         logger.warning(

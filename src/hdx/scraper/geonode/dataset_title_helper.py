@@ -5,6 +5,7 @@ import re
 from datetime import datetime, timedelta
 from re import Match
 from string import punctuation, whitespace
+from typing import ClassVar
 
 from dateutil.parser import ParserError
 from hdx.utilities.dateparse import parse_date, parse_date_range
@@ -29,7 +30,7 @@ class DatasetTitleHelper:
     PUNCTUATION_PATTERN = re.compile(rf"[{punctuation}]")
     EMPTY_BRACKET_PATTERN = re.compile(r"(\s?\(\s*\)\s?)")
     WORD_RIGHT_BRACKET_PATTERN = re.compile(r"\b(\s*)(\w{2,})\b\)")
-    DATE_INTRO_WORDS = ["on", "at", "for", "of", "in"]
+    DATE_INTRO_WORDS: ClassVar[list[str]] = ["on", "at", "for", "of", "in"]
 
     @classmethod
     def fuzzy_match_dates_in_title(
