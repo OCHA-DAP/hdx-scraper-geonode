@@ -12,7 +12,7 @@ from hdx.data.hdxobject import HDXError
 from hdx.data.vocabulary import Vocabulary
 from hdx.location.country import Country
 
-from hdx.scraper.geonode.geonodetohdx import GeoNodeToHDX
+from hdx.scraper.geonode.geonodetohdx import GeoNodeToHDX, is_allowed_url
 
 
 class TestGeoNodeToHDX:
@@ -854,6 +854,47 @@ class TestGeoNodeToHDX:
         ]
         assert showcase == self.mimushowcases[1]
 
+    def test_is_allowed_url(self):
+        assert is_allowed_url("https://xxx/a.csv") is True
+        assert is_allowed_url("http://xxx/a.png") is True
+        assert is_allowed_url("javascript:alert(1)") is False
+        assert is_allowed_url("data:text/html,abc") is False
+        assert is_allowed_url("ftp://xxx/a.csv") is False
+        assert is_allowed_url("https://") is False
+        assert is_allowed_url("/relative/path") is False
+
+    def test_disallowed_urls(self, configuration):
+        class Retrieve:
+            @staticmethod
+            def download_json(url):
+                assert url == "http://xxx/api/layers/1/"
+                return {
+                    "links": [
+                        {
+                            "extension": "csv",
+                            "name": "CSV",
+                            "url": "https://xxx/a.csv",
+                        },
+                        {
+                            "extension": "excel",
+                            "name": "Excel",
+                            "url": "javascript:alert(1)",
+                        },
+                    ]
+                }
+
+        layer = copy.deepcopy(TestGeoNodeToHDX.wfplayersdata[0])
+        layer["resource_uri"] = "/api/layers/1/"
+        layer["thumbnail_url"] = "javascript:alert(1)"
+        geonodetohdx = GeoNodeToHDX("http://xxx", Retrieve())
+        dataset, _, showcase = geonodetohdx.generate_dataset_and_showcase(
+            "SDN", layer, self.wfpmetadata
+        )
+        resources = dataset.get_resources()
+        assert len(resources) == 1
+        assert resources[0]["url"] == "https://xxx/a.csv"
+        assert "image_url" not in showcase
+
     def test_mappings(self, configuration, retriever, yaml_config):
         geonodetohdx = GeoNodeToHDX("http://yyy", retriever)
         layersdata = copy.deepcopy(TestGeoNodeToHDX.mimulayersdata[0])
@@ -1078,6 +1119,12 @@ class TestGeoNodeToHDX:
         assert datasets[2]["name"] == self.wfpdatasets[2]["name"]
         geonodetohdx = GeoNodeToHDX("http://yyy", retriever)
         datasets = []
+        geonodetohdx.delete_other_datasets(
+            self.mimunames, self.mimumetadata, delete_from_hdx=delete_from_hdx
+        )
+        assert len(datasets) == 0
+        # http://xx is a prefix of http://xxx but a different host
+        geonodetohdx = GeoNodeToHDX("http://xx", retriever)
         geonodetohdx.delete_other_datasets(
             self.mimunames, self.mimumetadata, delete_from_hdx=delete_from_hdx
         )

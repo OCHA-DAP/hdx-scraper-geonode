@@ -11,6 +11,7 @@ from collections import OrderedDict
 from collections.abc import Callable
 from datetime import datetime
 from typing import Any
+from urllib.parse import urlparse
 
 from hdx.data.dataset import Dataset
 from hdx.data.hdxobject import HDXError
@@ -29,6 +30,23 @@ from . import __version__
 from .dataset_title_helper import DatasetTitleHelper
 
 logger = logging.getLogger(__name__)
+
+ALLOWED_URL_SCHEMES = ("http", "https")
+
+
+def is_allowed_url(url: str) -> bool:
+    """
+    Check that url has an allowed scheme (http or https) and a host
+
+    Args:
+        url (str): Url to check
+
+    Returns:
+        bool: True if url is allowed, False if not
+
+    """
+    parsed_url = urlparse(url)
+    return parsed_url.scheme in ALLOWED_URL_SCHEMES and bool(parsed_url.hostname)
 
 
 def create_dataset_showcase(
@@ -388,6 +406,12 @@ class GeoNodeToHDX:
                     if ext_format in added_formats:
                         continue
                     ext_name = link["name"]
+                    url = link["url"]
+                    if not is_allowed_url(url):
+                        logger.warning(
+                            f"Ignoring {ext_name} resource of {title} with disallowed url {url}!"
+                        )
+                        continue
                     if (
                         ext_format == "zipped shapefile"
                         and "shape" not in ext_name.lower()
@@ -396,7 +420,7 @@ class GeoNodeToHDX:
                     resource = Resource(
                         {
                             "name": f"{title} {ext_name}",
-                            "url": link["url"],
+                            "url": url,
                             "description": f"{ext_name} file. {notes}",
                         }
                     )
@@ -437,9 +461,15 @@ class GeoNodeToHDX:
                 "title": title,
                 "notes": notes,
                 "url": f"{self._geonode_urls[0]}{detail_url}",
-                "image_url": layer["thumbnail_url"],
             }
         )
+        thumbnail_url = layer["thumbnail_url"]
+        if is_allowed_url(thumbnail_url):
+            showcase["image_url"] = thumbnail_url
+        else:
+            logger.warning(
+                f"Ignoring thumbnail of {title} with disallowed url {thumbnail_url}!"
+            )
         showcase.add_tags(tags)
         return dataset, ranges, showcase
 
@@ -536,6 +566,7 @@ class GeoNodeToHDX:
             None
 
         """
+        geonode_hosts = {urlparse(x).hostname for x in self._geonode_urls}
         for dataset in Dataset.search_in_hdx(
             fq=f"organization:{self.get_orgname(metadata)}"
         ):
@@ -543,7 +574,7 @@ class GeoNodeToHDX:
                 continue
             if dataset["name"] in datasets_to_keep:
                 continue
-            if not any(x in dataset.get_resource()["url"] for x in self._geonode_urls):
+            if urlparse(dataset.get_resource()["url"]).hostname not in geonode_hosts:
                 continue
             logger.info(f"Deleting {dataset['title']}")
             delete_from_hdx(dataset)
